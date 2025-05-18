@@ -21,7 +21,7 @@
 - **Nhận xét về hiệu suất**:
   - **BFS**: Đảm bảo đường đi ngắn nhất, nhưng tốn nhiều bộ nhớ. Thời gian chạy thường dưới 1 giây cho bài toán đơn giản, nhưng có thể vượt giới hạn bộ nhớ với bài toán phức tạp.
 
-                                                    ![BFS](./gif/bfs.gif)
+  	  ![BFS](./gif/bfs.gif)
   - **DFS**: Tiết kiệm bộ nhớ hơn BFS, nhanh (dưới 1 giây) nếu tìm được giải pháp, nhưng không tối ưu và dễ thất bại nếu mục tiêu ở nhánh khác.
   - **UCS**: Tương tự BFS, tối ưu nhưng tốn bộ nhớ, thời gian chạy từ 0.5 đến 2 giây.
   - **IDS**: Kết hợp BFS và DFS, tối ưu và ít tốn bộ nhớ hơn BFS, thời gian chạy 1-3 giây cho bài toán trung bình.
