@@ -103,7 +103,7 @@
 
 
     
-  - **Simulated Annealing**: Thường không tìm được giải pháp trong 15 giây do tốc độ làm mát chậm.
+  - **Simulated Annealing**: Thường không tìm được giải pháp trong 15 giây do tốc độ chậm.
 
 
 ![Simulated_Annealing](./gif/simulated_annealing.gif)
