@@ -49,19 +49,19 @@
   - **Greedy**: Rất nhanh (dưới 0.5 giây), nhưng không tối ưu và dễ thất bại nếu kẹt ở nhánh sai.
 
 
- ![GREEDY](./gif/greedy.gif)
+       ![GREEDY](./gif/greedy.gif)
 
 
   - **A**\*: Tối ưu, nhanh (0.02-0.5 giây), hiệu quả về bộ nhớ và thời gian, phù hợp với hầu hết các bài toán.
 
 
-![ASTAR](./gif/astar.gif)
+      ![ASTAR](./gif/astar.gif)
 
     
   - **IDA**\*: Tiết kiệm bộ nhớ hơn A\*, thời gian chạy 0.5-1 giây, chậm hơn A\* nhưng khả thi với hệ thống hạn chế bộ nhớ.
 
 
-![IDA_STAR](./gif/ida_star.gif)
+      ![IDA_STAR](./gif/ida_star.gif)
     
 
 **2.3. Học củng cố (Q-Learning)**
@@ -76,7 +76,7 @@
   - Q-Learning không hiệu quả do bài toán 8 ô là xác định, cần nhiều thời gian học (thường vượt 15 giây) và không hội tụ trong giới hạn thử nghiệm.
 
 
-![Q_LEARNING](./gif/q_learning.gif)
+      ![Q_LEARNING](./gif/q_learning.gif)
     
 
 **2.4. Tìm kiếm cục bộ (Simple Hill Climbing, Steepest Hill Climbing, Stochastic Hill Climbing, Simulated Annealing, Local Beam Search)**
@@ -93,39 +93,39 @@
   - **Steepest Hill Climbing**: Tương tự, dưới 0.2 giây, nhưng xác suất thất bại cao.
  
 
-![Steepest_Hill_Climbing](./gif/steepest.gif)
+      ![Steepest_Hill_Climbing](./gif/steepest.gif)
 
 
   - **Stochastic Hill Climbing**: Dưới 0.3 giây, ổn định hơn nhờ ngẫu nhiên, nhưng kết quả không nhất quán.
 
 
-![Stochastic Hill Climbing](./gif/stochastic.gif)
+      ![Stochastic Hill Climbing](./gif/stochastic.gif)
 
 
     
   - **Simulated Annealing**: Thường không tìm được giải pháp trong 15 giây do tốc độ chậm.
 
 
-![Simulated_Annealing](./gif/simulated_annealing.gif)
+      ![Simulated_Annealing](./gif/simulated_annealing.gif)
 
     
   - **Local Beam Search**: 0.5-1 giây, hiệu quả hơn Hill Climbing, nhưng vẫn có thể thất bại.
     
 
-![Local_Beam_Search](./gif/local_beam.gif)
+      ![Local_Beam_Search](./gif/local_beam.gif)
 
 
 **2.5. Tìm kiếm trong môi trường không xác định (AND-OR Graph Search)**
 
 **Thành phần chính**: Trong môi trường không xác định, hành động di chuyển ô trống có xác suất dẫn đến kết quả không mong muốn (20% khả năng tạo ra một trạng thái ngẫu nhiên hợp lệ thay vì di chuyển đúng hướng).
 
-- **Trạng thái**: Cấu hình bảng 8 ô.
+- **Trạng thái**: Cấu hình bảng với 9 ô.
 - **Hành động**: Di chuyển ô trống (lên, xuống, trái, phải), với mô hình chuyển tiếp xác suất (80% đúng hành động, 20% ngẫu nhiên).
 - **Mục tiêu**: Đạt trạng thái mục tiêu \[1, 2, 3, 4, 5, 6, 7, 8, 0\].
 - **Giải pháp**: Một kế hoạch điều kiện (cây hoặc chuỗi trạng thái) đảm bảo đạt mục tiêu bất kể kết quả không xác định.
 
 
-![AND_OR](./gif/and_or.gif)
+     ![AND_OR](./gif/and_or.gif)
 
   
 - **Nhận xét về hiệu suất**:
@@ -146,13 +146,13 @@
   - **AC3**: Một chuỗi trạng thái (hoặc trạng thái duy nhất) sau khi thực thi tính nhất quán cung, nhưng có thể không tạo ra đường đi đầy đủ.
 
 
-![AC3](./gif/ac3.gif)
+      ![AC3](./gif/ac3.gif)
 
 
   - **Backtracking**: Một chuỗi trạng thái đại diện cho các di chuyển hợp lệ từ trạng thái ban đầu đến mục tiêu.
 
 
-![Backtracking](./gif/backtracking.gif)
+      ![Backtracking](./gif/backtracking.gif)
 
     
 - **Nhận xét về hiệu suất**:
