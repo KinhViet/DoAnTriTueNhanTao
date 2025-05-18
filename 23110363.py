@@ -9,7 +9,7 @@ import numpy as np
 
 pygame.init()
 
-# Cấu hình giao diện
+# Interface conf
 WIDTH = 300
 HEIGHT = 570
 TILE_SIZE = WIDTH // 3
@@ -22,11 +22,11 @@ GRAY = (128, 128, 128)
 RED = (255, 0, 0)
 BLUE = (0, 0, 255)
 GREEN = (0, 255, 0)
+GRAY_LIGHT = (200, 200, 200)
 
-# Trạng thái ban đầu và đích
+# State
 GOAL_STATE = [1, 2, 3, 4, 5, 6, 7, 8, 0]
 
-# Danh sách thuật toán
 ALGORITHMS = [
     "BFS", "DFS", "IDS", "UCS", "Greedy", "A*", "IDA*",
     "Hill Climbing", "Steepest Hill", "Stochastic Hill", "Local Beam",
@@ -40,7 +40,11 @@ EXPORT_BUTTON = pygame.Rect(200, 410, 90, 40)
 selected_algorithm = None
 last_solution = None
 
-# Giới hạn thời gian
+
+cost = 0 
+steps = 0 
+execution_time = 0.0
+
 TIME_LIMIT = 15.0
 
 def is_valid_state(state):
@@ -72,11 +76,13 @@ def generate_random_start(goal, steps=50):
     
     return current_state
 
-def draw_board(state):
+def draw_board(state, dragging_tile=None, drag_pos=None):
     screen.fill(WHITE)
     for i in range(3):
         for j in range(3):
             idx = i * 3 + j
+            if dragging_tile is not None and idx == dragging_tile:
+                continue
             value = state[idx]
             if value == 0:
                 pygame.draw.rect(screen, GRAY, (j * TILE_SIZE, i * TILE_SIZE, TILE_SIZE, TILE_SIZE))
@@ -86,6 +92,20 @@ def draw_board(state):
                 text = font.render(str(value), True, BLACK)
                 text_rect = text.get_rect(center=(j * TILE_SIZE + TILE_SIZE // 2, i * TILE_SIZE + TILE_SIZE // 2))
                 screen.blit(text, text_rect)
+
+    if dragging_tile is not None and drag_pos is not None:
+        value = state[dragging_tile]
+        if value != 0:
+            drag_x, drag_y = drag_pos
+            tile_x = drag_x - TILE_SIZE // 2
+            tile_y = drag_y - TILE_SIZE // 2
+            tile_x = max(0, min(tile_x, WIDTH - TILE_SIZE))
+            tile_y = max(0, min(tile_y, HEIGHT - TILE_SIZE))
+            pygame.draw.rect(screen, WHITE, (tile_x, tile_y, TILE_SIZE, TILE_SIZE), 2)
+            font = pygame.font.Font(None, 50)
+            text = font.render(str(value), True, BLACK)
+            text_rect = text.get_rect(center=(tile_x + TILE_SIZE // 2, tile_y + TILE_SIZE // 2))
+            screen.blit(text, text_rect)
 
     pygame.draw.rect(screen, GRAY, LISTBOX_RECT, 2)
     mouse_x, mouse_y = pygame.mouse.get_pos()
@@ -125,25 +145,22 @@ def draw_board(state):
     text_rect = text.get_rect(center=EXPORT_BUTTON.center)
     screen.blit(text, text_rect)
 
+    info_rect = pygame.Rect(WIDTH - 110, HEIGHT - 110, 100, 90)
+    pygame.draw.rect(screen, GRAY_LIGHT, info_rect)
+    pygame.draw.rect(screen, GRAY, info_rect, 1)
+    info_font = pygame.font.Font(None, 20)
+    cost_text = info_font.render(f"Cost: {cost}", True, BLACK)
+    steps_text = info_font.render(f"Steps: {steps}", True, BLACK)
+    time_text = info_font.render(f"Time: {execution_time:.3f}s", True, BLACK)
+    screen.blit(cost_text, (WIDTH - 90, HEIGHT - 90))
+    screen.blit(steps_text, (WIDTH - 90, HEIGHT - 70))
+    screen.blit(time_text, (WIDTH - 90, HEIGHT - 50))
+
     pygame.display.flip()
 
-def move_tile(state, direction):
-    empty_idx = find_empty(state)
-    row, col = divmod(empty_idx, 3)
-    new_row, new_col = row, col
-    if direction == "up" and row > 0:
-        new_row -= 1
-    elif direction == "down" and row < 2:
-        new_row += 1
-    elif direction == "left" and col > 0:
-        new_col -= 1
-    elif direction == "right" and col < 2:
-        new_col += 1
-    else:
-        return state
-    new_idx = new_row * 3 + new_col
+def move_tile(state, from_idx, to_idx):
     new_state = copy.deepcopy(state)
-    new_state[empty_idx], new_state[new_idx] = new_state[new_idx], new_state[empty_idx]
+    new_state[from_idx], new_state[to_idx] = new_state[to_idx], new_state[from_idx]
     return new_state
 
 def get_neighbors(state):
@@ -577,7 +594,7 @@ def q_learning(start_state, goal_state):
             if state_tuple not in q_table:
                 q_table[state_tuple] = {a: 0.0 for a in actions}
             action = get_action(current_state)
-            next_state = move_tile(current_state, action)
+            next_state = move_tile(current_state, find_empty(current_state), find_empty(current_state))
             reward = -manhattan_distance(next_state, goal_state)
             if next_state == goal_state:
                 reward = 100
@@ -597,7 +614,7 @@ def q_learning(start_state, goal_state):
         if state_tuple not in q_table:
             return None
         action = max(q_table[state_tuple], key=q_table[state_tuple].get)
-        next_state = move_tile(current_state, action)
+        next_state = move_tile(current_state, find_empty(current_state), find_empty(current_state))
         path.append(next_state)
         current_state = next_state
         steps += 1
@@ -621,13 +638,24 @@ def export_path(solution, algorithm_name):
 
 current_state = generate_random_start(GOAL_STATE, steps=20)
 running = True
+dragging_tile = None
+drag_pos = None
+drag_start_pos = None
+
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
         elif event.type == pygame.MOUSEBUTTONDOWN:
             x, y = event.pos
-            if LISTBOX_RECT.collidepoint(x, y):
+            if y < 300:
+                row, col = y // TILE_SIZE, x // TILE_SIZE
+                idx = row * 3 + col
+                if 0 <= idx < 9:
+                    dragging_tile = idx
+                    drag_start_pos = (x, y)
+                    drag_pos = (x, y)
+            elif LISTBOX_RECT.collidepoint(x, y):
                 index = (y - LISTBOX_RECT.y) // LISTBOX_ITEM_HEIGHT
                 if 0 <= index < len(ALGORITHMS):
                     selected_algorithm = ALGORITHMS[index]
@@ -667,6 +695,9 @@ while running:
                     solution, execution_time = time_algorithm(ac3, current_state, GOAL_STATE)
                 elif selected_algorithm == "Q-Learning":
                     solution, execution_time = time_algorithm(q_learning, current_state, GOAL_STATE)
+                cost = len(solution) if solution else 0 
+                steps = len(solution) if solution else 0  
+                execution_time = execution_time
                 print(f"Execution time: {execution_time:.3f} seconds")
                 last_solution = solution
                 if solution:
@@ -681,32 +712,60 @@ while running:
                 current_state = generate_random_start(GOAL_STATE, steps=20)
                 print("Generated new random state:", current_state)
                 last_solution = None
+                cost = 0
+                steps = 0
+                execution_time = 0.0
             elif EXPORT_BUTTON.collidepoint(x, y):
                 if last_solution and selected_algorithm:
                     export_path(last_solution, selected_algorithm)
                 else:
                     print("No solution to export!")
-            if y < 300:
-                row, col = y // TILE_SIZE, x // TILE_SIZE
-                idx = row * 3 + col
-                empty_idx = find_empty(current_state)
-                empty_row, empty_col = divmod(empty_idx, 3)
-                if abs(row - empty_row) + abs(col - empty_col) == 1:
-                    current_state[idx], current_state[empty_idx] = current_state[empty_idx], current_state[idx]
+
+        elif event.type == pygame.MOUSEMOTION:
+            if dragging_tile is not None:
+                drag_pos = event.pos
+        elif event.type == pygame.MOUSEBUTTONUP:
+            if dragging_tile is not None:
+                x, y = event.pos
+                drop_row, drop_col = y // TILE_SIZE, x // TILE_SIZE
+                drop_idx = drop_row * 3 + drop_col
+                if 0 <= drop_row < 3 and 0 <= drop_col < 3 and drop_idx != dragging_tile:
+                    current_state = move_tile(current_state, dragging_tile, drop_idx)
                     last_solution = None
+                    cost = 0 
+                    steps = 0 
+                    execution_time = 0.0
+                dragging_tile = None
+                drag_pos = None
+                drag_start_pos = None
+
         elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_UP:
-                current_state = move_tile(current_state, "up")
+            empty_idx = find_empty(current_state)
+            if event.key == pygame.K_UP and empty_idx > 2:
+                current_state = move_tile(current_state, empty_idx, empty_idx - 3)
                 last_solution = None
-            elif event.key == pygame.K_DOWN:
-                current_state = move_tile(current_state, "down")
+                cost = 0 
+                steps = 0
+                execution_time = 0.0 
+            elif event.key == pygame.K_DOWN and empty_idx < 6:
+                current_state = move_tile(current_state, empty_idx, empty_idx + 3)
                 last_solution = None
-            elif event.key == pygame.K_LEFT:
-                current_state = move_tile(current_state, "left")
+                cost = 0
+                steps = 0
+                execution_time = 0.0 
+            elif event.key == pygame.K_LEFT and empty_idx % 3 < 2:
+                current_state = move_tile(current_state, empty_idx, empty_idx + 1)
                 last_solution = None
-            elif event.key == pygame.K_RIGHT:
-                current_state = move_tile(current_state, "right")
+                cost = 0 
+                steps = 0
+                execution_time = 0.0
+            elif event.key == pygame.K_RIGHT and empty_idx % 3 > 0:
+                current_state = move_tile(current_state, empty_idx, empty_idx - 1)
                 last_solution = None
-    draw_board(current_state)
+                cost = 0
+                steps = 0 
+                execution_time = 0.0
+
+    draw_board(current_state, dragging_tile, drag_pos)
 
 pygame.quit()
