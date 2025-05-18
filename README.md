@@ -157,10 +157,10 @@
     
 - **Nhận xét về hiệu suất**:
   - **AC3**:
-    - **Thời gian**: 0.1–0.5 giây, nhanh trong việc truyền bá ràng buộc nhưng không phải là thuật toán tìm đường hoàn chỉnh.
-    - **Bộ nhớ**: Thấp, chỉ lưu trữ miền giá trị và ràng buộc.
-    - **Tính tối ưu**: Không áp dụng, vì đây là bước tiền xử lý thay vì tìm đường đi.
-    - **Tính ổn định**: Ổn định nhưng không hoàn chỉnh nếu không kết hợp với backtracking.
+    - **Thời gian**: 0.1–0.5 giây, thời gian xử lý khá nhanh nhưng chưa phải là thuật toán tìm đường hoàn chỉnh.
+    - **Bộ nhớ**: Chỉ lưu trữ miền giá trị và ràng buộc nên sử dụng ít bộ nhớ.
+    - **Tính tối ưu**: Chưa có tính tối ưu vì là bước tiền xử lý thay vì tìm đường đi.
+    - **Tính ổn định**: Ổn định nhưng không hoàn chỉnh.
   - **Backtracking**:
     - **Thời gian**: 0.5–3 giây, phụ thuộc vào độ sâu của tìm kiếm.
     - **Bộ nhớ**: Trung bình, lưu trữ đường đi hiện tại và các gán giá trị tạm thời.
