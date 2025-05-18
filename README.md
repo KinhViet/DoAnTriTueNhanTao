@@ -47,8 +47,22 @@
     - **Giải pháp**: Một danh sách các trạng thái từ trạng thái ban đầu đến trạng thái mục tiêu, thường được tìm nhanh hơn nhờ heuristic, nhưng không phải lúc nào cũng tối ưu (ví dụ: Greedy).
 - **Nhận xét**:
   - **Greedy**: Rất nhanh (dưới 0.5 giây), nhưng không tối ưu và dễ thất bại nếu kẹt ở nhánh sai.
+
+
+ ![GREEDY](./gif/greedy.gif)
+
+
   - **A**\*: Tối ưu, nhanh (0.02-0.5 giây), hiệu quả về bộ nhớ và thời gian, phù hợp với hầu hết các bài toán.
+
+
+![ASTAR](./gif/astar.gif)
+
+    
   - **IDA**\*: Tiết kiệm bộ nhớ hơn A\*, thời gian chạy 0.5-1 giây, chậm hơn A\* nhưng khả thi với hệ thống hạn chế bộ nhớ.
+
+
+![IDA_STAR](./gif/ida_star.gif)
+    
 
 **2.3. Học củng cố (Q-Learning)**
 
@@ -61,16 +75,45 @@
 - **Nhận xét về hiệu suất**:
   - Q-Learning không hiệu quả do bài toán 8 ô là xác định, cần nhiều thời gian học (thường vượt 15 giây) và không hội tụ trong giới hạn thử nghiệm.
 
+
+![Q_LEARNING](./gif/q_learning.gif)
+    
+
 **2.4. Tìm kiếm cục bộ (Simple Hill Climbing, Steepest Hill Climbing, Stochastic Hill Climbing, Simulated Annealing, Local Beam Search)**
 
 - - **Thành phần chính**: Sử dụng heuristic (khoảng cách Manhattan) để cải thiện trạng thái hiện tại qua các bước di chuyển ô trống, tập trung vào trạng thái lân cận mà không khám phá toàn bộ không gian.
     - **Giải pháp**: Chuỗi trạng thái dẫn đến mục tiêu, hoặc None nếu kẹt ở cực trị cục bộ.
 - **Nhận xét về hiệu suất**:
   - **Simple Hill Climbing**: Nhanh (dưới 0.1 giây), nhưng dễ kẹt ở cực trị cục bộ.
+
+
+      ![Simple_Hill_Climbing](./gif/hill_climbing.gif)
+
+
   - **Steepest Hill Climbing**: Tương tự, dưới 0.2 giây, nhưng xác suất thất bại cao.
+ 
+
+![Steepest_Hill_Climbing](./gif/steepest.gif)
+
+
   - **Stochastic Hill Climbing**: Dưới 0.3 giây, ổn định hơn nhờ ngẫu nhiên, nhưng kết quả không nhất quán.
+
+
+![Stochastic Hill Climbing](./gif/stochastic.gif)
+
+
+    
   - **Simulated Annealing**: Thường không tìm được giải pháp trong 15 giây do tốc độ làm mát chậm.
+
+
+![Simulated_Annealing](./gif/simulated_annealing.gif)
+
+    
   - **Local Beam Search**: 0.5-1 giây, hiệu quả hơn Hill Climbing, nhưng vẫn có thể thất bại.
+    
+
+![Local_Beam_Search](./gif/local_beam.gif)
+
 
 **2.5. Tìm kiếm trong môi trường không xác định (AND-OR Graph Search)**
 
@@ -80,6 +123,11 @@
 - **Hành động**: Di chuyển ô trống (lên, xuống, trái, phải), với mô hình chuyển tiếp xác suất (80% đúng hành động, 20% ngẫu nhiên).
 - **Mục tiêu**: Đạt trạng thái mục tiêu \[1, 2, 3, 4, 5, 6, 7, 8, 0\].
 - **Giải pháp**: Một kế hoạch điều kiện (cây hoặc chuỗi trạng thái) đảm bảo đạt mục tiêu bất kể kết quả không xác định.
+
+
+![AND_OR](./gif/and_or.gif)
+
+  
 - **Nhận xét về hiệu suất**:
   - **Thời gian**: 1–5 giây, phụ thuộc vào độ phức tạp của không gian trạng thái và số lượng kết quả không xác định.
   - **Bộ nhớ**: Cao, do cần lưu trữ nhiều kết quả có thể xảy ra cho mỗi hành động.
@@ -96,7 +144,17 @@
 - **Mục tiêu**: Gán giá trị cho các vị trí để thỏa mãn tất cả ràng buộc và đạt trạng thái mục tiêu.
 - **Giải pháp**:
   - **AC3**: Một chuỗi trạng thái (hoặc trạng thái duy nhất) sau khi thực thi tính nhất quán cung, nhưng có thể không tạo ra đường đi đầy đủ.
+
+
+![AC3](./gif/ac3.gif)
+
+
   - **Backtracking**: Một chuỗi trạng thái đại diện cho các di chuyển hợp lệ từ trạng thái ban đầu đến mục tiêu.
+
+
+![Backtracking](./gif/backtracking.gif)
+
+    
 - **Nhận xét về hiệu suất**:
   - **AC3**:
     - **Thời gian**: 0.1–0.5 giây, nhanh trong việc truyền bá ràng buộc nhưng không phải là thuật toán tìm đường hoàn chỉnh.
